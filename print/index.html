@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ru">
+<head><meta name="robots" content="noindex,nofollow">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; font-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <title>Формат — калькулятор печати</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="pricing.js" defer></script>
+  <script src="engine.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#calculator">К параметрам расчёта</a>
+<header class="topbar"><a class="brand" href="#top" aria-label="Формат — широкоформатная печать, к началу"><span class="brand-name">ФОРМАТ</span><span class="brand-caption">ШИРОКОФОРМАТНАЯ<br> ПЕЧАТЬ</span></a></header>
+<main id="top"><div class="page-heading"><h1>Печать в вашем формате</h1><p>Выберите материал и размер. Получите стоимость до копейки.</p></div>
+<div class="calculator-layout" id="calculator"><aside class="media-column" aria-labelledby="preview-title">
+<section class="preview-panel"><div class="preview-heading"><h2 id="preview-title">Ваш формат</h2><span id="preview-material">Баннер</span></div>
+<div id="size-preview" class="preview-stage" role="img" aria-label="Схема пропорций: 100 на 100 сантиметров"><div class="specimen-frame"><span class="width-dimension" data-dimension="width">100 см</span>
+<div class="specimen" id="specimen" data-material="banner" aria-hidden="true"><div class="poster-top"><span>ФОРМАТ / ПЕЧАТЬ</span><span>01—26</span></div><div class="poster-title">ФОР<span>МАТ</span></div><div class="poster-stripes"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="poster-foot"><span>МАЛОЙ ИДЕИ<br>НЕ БЫВАЕТ.</span><span class="poster-arrow">↗</span></div></div>
+<span class="height-dimension" data-dimension="height">100 см</span></div></div>
+<div class="preview-caption"><span>Превью пропорций</span><strong id="preview-area">1 м² / шт.</strong></div></section>
+<div class="media-note"><span class="media-note-mark" aria-hidden="true">↳</span><p>Каждый сантиметр имеет значение.<br><span>Меняйте размер — следите за пропорциями.</span></p></div></aside><div class="configuration-column"><div class="builder-heading"><h2>Рассчитать печать</h2><p>Ваши параметры. Ваш тираж.</p></div>      <form class="calculator-panel" id="print-form" novalidate>
+        <fieldset id="material"><legend>Материал</legend><div class="materials">
+          <label class="material-option"><input type="radio" name="material" value="banner" checked><span class="material-art banner-art" aria-hidden="true"></span><span class="material-title">Баннер</span><span class="material-rate" data-rate="banner"></span></label>
+          <label class="material-option"><input type="radio" name="material" value="film"><span class="material-art film-art" aria-hidden="true"></span><span class="material-title">Плёнка</span><span class="material-rate" data-rate="film"></span></label>
+          <label class="material-option"><input type="radio" name="material" value="paper"><span class="material-art paper-art" aria-hidden="true"></span><span class="material-title">Бумага</span><span class="material-rate" data-rate="paper"></span></label>
+        </div></fieldset>
+        <fieldset id="dimensions"><legend>Размер и тираж</legend>
+          <div class="size-fields"><div class="field"><label for="width">Ширина</label><div class="input-wrap"><input id="width" name="width" type="text" inputmode="decimal" value="100" maxlength="8" aria-describedby="size-help width-error" autocomplete="off"><span>см</span></div><span class="field-error" id="width-error"></span></div>
+          <span class="multiply" aria-hidden="true">×</span>
+          <div class="field"><label for="height">Высота</label><div class="input-wrap"><input id="height" name="height" type="text" inputmode="decimal" value="100" maxlength="8" aria-describedby="size-help height-error" autocomplete="off"><span>см</span></div><span class="field-error" id="height-error"></span></div></div>
+          <p class="field-help" id="size-help"></p>
+          <div class="presets" role="group" aria-label="Готовые размеры в сантиметрах"><span>Готовые размеры, см</span><button type="button" data-size="100,100" aria-pressed="true"><i class="preset-icon preset-square" aria-hidden="true"></i><span>100 × 100</span></button><button type="button" data-size="120,80" aria-pressed="false"><i class="preset-icon preset-wide" aria-hidden="true"></i><span>120 × 80</span></button><button type="button" data-size="100,200" aria-pressed="false"><i class="preset-icon preset-tall" aria-hidden="true"></i><span>100 × 200</span></button></div>
+          <div class="quantity-row"><div class="field quantity-field"><label for="quantity">Тираж</label><div class="input-wrap"><input id="quantity" name="quantity" type="text" inputmode="numeric" value="1" maxlength="6" aria-describedby="quantity-help quantity-error" autocomplete="off"><span>шт.</span></div><span class="field-error" id="quantity-error"></span></div><p class="field-help" id="quantity-help"></p></div>
+        </fieldset>
+        <fieldset id="finishing"><legend>Обработка</legend>
+          <div id="banner-options"><label class="option-row"><input type="checkbox" id="edge"><span><strong>Усиление края</strong><small>По всему периметру изделия</small></span><span class="option-rate" data-finish-rate="edge"></span></label>
+          <label class="option-row"><input type="checkbox" id="eyelets-toggle"><span><strong>Люверсы</strong><small>Количество на один экземпляр</small></span><span class="option-rate" data-finish-rate="eyelets"></span></label>
+          <div class="field eyelets-field" id="eyelets-field" hidden><label for="eyelets">Люверсов на экземпляр</label><div class="input-wrap"><input id="eyelets" type="text" inputmode="numeric" value="4" maxlength="4" aria-describedby="eyelets-help eyelets-error" autocomplete="off"><span>шт.</span></div><span class="field-help" id="eyelets-help"></span><span class="field-error" id="eyelets-error"></span></div></div>
+          <div id="sheet-options" hidden><label class="option-row"><input type="checkbox" id="lamination"><span><strong>Ламинация</strong><small>На всю площадь тиража</small></span><span class="option-rate" data-finish-rate="lamination"></span></label></div>
+          <p class="change-notice" id="change-notice" role="status"></p>
+        </fieldset>
+      </form>        <section id="estimate" class="estimate-panel" aria-labelledby="estimate-title"><div class="estimate-heading"><h2 id="estimate-title">Ваш расчёт</h2><span id="estimate-quantity">1 шт.</span></div>
+          <div id="valid-result"><p class="estimate-spec" id="estimate-spec"></p><div id="cost-lines"></div><div class="total-row"><span>Итого за тираж</span><strong id="total-price">650 ₽</strong></div><div class="unit-row"><span>За экземпляр, в среднем</span><strong id="unit-price">650 ₽</strong></div><div class="actions"><button class="primary-button" type="button" id="copy-button"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="1"/><path d="M15 8V4H4v11h4"/></svg> Скопировать расчёт</button><button class="secondary-button" type="button" id="print-button">Печать / PDF <span aria-hidden="true">↗</span></button></div></div>
+          <div id="invalid-result" hidden><strong>Проверьте параметры</strong><p>Исправьте отмеченные поля, чтобы увидеть стоимость.</p></div>
+          <p class="result-note">Демонстрационный прайс · цены условные</p>
+          <p class="action-status" id="action-status" role="status"></p>
+          <div id="copy-fallback" hidden><label for="copy-text">Скопируйте расчёт вручную</label><textarea id="copy-text" rows="9" readonly></textarea><button type="button" class="text-button" id="select-text">Выделить текст</button></div>
+        </section></div></div>
+<details class="price-info" id="price-info"><summary><span>Как устроен расчёт</span><span aria-hidden="true">+</span></summary><div class="price-info-content"><div><h2>У каждой детали — своя единица.</h2><p>Печать и ламинация считаются по площади, усиление — по периметру, люверсы — поштучно. Итог складывается из строк, округлённых до копеек.</p></div><div><p>Размеры — в сантиметрах. Площадь для расчёта не округляется. Доставка, раскладка на рулоне и производственные припуски не включены. Расчёт не подтверждает изготовимость.</p><span id="price-version"></span></div></div></details>
+<p class="sr-only" id="live-summary" aria-live="polite" aria-atomic="true"></p><noscript><p class="noscript">Для расчёта включите JavaScript в браузере.</p></noscript></main>
+<footer><div class="footer-lockup"><span class="footer-brand">ФОРМАТ.</span><span class="footer-tagline">Из размера складывается большее.</span></div><span>Калькулятор печати / 2026</span></footer>
+<section id="print-sheet" aria-label="Расчёт для печати"><h1>Формат. Расчёт печати</h1><pre id="print-text"></pre></section></body></html>

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ru">
+<head><meta name="robots" content="noindex,nofollow">
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none';script-src 'self';style-src 'self';img-src 'self';font-src 'self';connect-src 'none';base-uri 'none';form-action 'none';object-src 'none'">
+  <title>Дома легко — калькулятор уборки</title>
+  <link rel="stylesheet" href="style.css"><script defer src="pricing.js"></script><script defer src="engine.js"></script><script defer src="app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#calculator">К расчёту уборки</a>
+  <header class="site-header"><a class="brand" href="#top"><img src="logo.svg" alt="" width="39" height="39"><span>дома легко</span></a></header>
+  <main id="top">
+    <div class="page-heading"><p class="eyebrow">КАЛЬКУЛЯТОР УБОРКИ КВАРТИРЫ</p><h1>Рассчитать стоимость уборки</h1><p>Выберите, что нужно вашему дому. Состав и стоимость — сразу перед вами.</p></div>
+    <div class="calculator-layout" id="calculator">
+      <form id="cleaning-form" class="calculator-form" novalidate>
+        <fieldset id="cleaning-type"><legend>Какая уборка нужна?</legend><div class="type-options">
+          <label class="type-option"><input type="radio" name="type" value="regular" checked><span><strong>Поддерживающая</strong><small>Освежить привычный порядок</small></span></label>
+          <label class="type-option"><input type="radio" name="type" value="deep"><span><strong>Генеральная</strong><small>Включая технику и шкафы внутри</small></span></label>
+        </div><p class="type-description" id="type-description"></p></fieldset>
+        <fieldset class="area-section"><legend>Площадь квартиры</legend><div class="area-row"><div class="field"><label class="sr-only" for="area">Площадь квартиры, м²</label><div class="input-wrap area-input"><input id="area" name="area" type="text" inputmode="numeric" value="60" maxlength="5" aria-describedby="area-help area-error" autocomplete="off"><span>м²</span></div><p class="field-error" id="area-error"></p></div><div class="presets" aria-label="Примеры площади"><button type="button" data-area="40">40 м²</button><button type="button" data-area="60">60 м²</button><button type="button" data-area="90">90 м²</button></div></div><p class="field-help" id="area-help"></p><p class="rate-note" id="rate-note"></p></fieldset>
+        <fieldset id="extras"><legend>Добавить к уборке</legend>
+          <div class="windows-row"><div class="window-label"><label for="windows">Мытьё окон</label><span id="windows-price"></span></div><div class="stepper"><button id="windows-minus" type="button" aria-label="Уменьшить количество створок" aria-controls="windows">−</button><input id="windows" type="text" inputmode="numeric" value="0" maxlength="3" aria-label="Количество створок" aria-describedby="windows-help windows-error" autocomplete="off"><button id="windows-plus" type="button" aria-label="Увеличить количество створок" aria-controls="windows">+</button></div></div>
+          <p class="field-help" id="windows-help">Мытьё створок с двух сторон.</p><p class="field-error" id="windows-error"></p>
+          <details class="window-details"><summary>Какие окна входят?</summary><p>Одна створка — отдельная секция обычного окна. Учитываются доступные створки, которые можно безопасно вымыть с двух сторон. Балконное, панорамное и высотное остекление в расчёт не входят.</p></details>
+          <div class="appliance-options">
+            <label class="extra-row" data-extra-row="oven"><input type="checkbox" id="oven"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M4 8h16M8 12h8v5H8zM8 5.5h.01M12 5.5h.01"/></svg><span><strong>Духовка внутри</strong><small>Одна духовка</small></span><span class="extra-price" data-extra-price="oven"></span></label>
+            <label class="extra-row" data-extra-row="fridge"><input type="checkbox" id="fridge"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M6 9h12M9 5v1M9 12v3"/></svg><span><strong>Холодильник внутри</strong><small>Освобождён и разморожен</small></span><span class="extra-price" data-extra-price="fridge"></span></label>
+            <label class="extra-row" data-extra-row="cabinets"><input type="checkbox" id="cabinets"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18v15H3zM12 5v15M9 10v3M15 10v3"/></svg><span><strong>Шкафы на кухне внутри</strong><small>Одна кухня, полки освобождены</small></span><span class="extra-price" data-extra-price="cabinets"></span></label>
+          </div><p class="change-notice" id="change-notice" role="status"></p>
+        </fieldset>
+        <details id="scope" class="scope"><summary>Что входит в расчёт <span aria-hidden="true">+</span></summary><div><p>Для квартиры с одной кухней и одним санузлом: доступные поверхности, сухая и влажная уборка полов, кухня снаружи и сантехника.</p><p id="scope-included"></p><p>Модель не включает уборку после ремонта, химчистку, сложные загрязнения, дополнительные санузлы и труднодоступные работы. Эти случаи требуют отдельного согласования.</p></div></details>
+      </form>
+      <aside class="summary-column" aria-label="Результат расчёта">
+        <section class="estimate" id="estimate" aria-labelledby="estimate-title"><div class="estimate-heading"><h2 id="estimate-title">Ваш расчёт</h2><span id="estimate-area">60 м²</span></div><p class="estimate-type" id="estimate-type"></p><p class="basis-note">Квартира · одна кухня · один санузел</p>
+          <div id="valid-result"><div id="cost-lines"></div><p id="included-summary" class="included-summary" hidden></p><div class="total"><span>Итого</span><strong id="total-price"></strong></div><p class="price-note">Демонстрационный прайс · цены условные</p><div class="actions"><button class="primary-button" id="copy-button" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 8h11v13H9zM15 8V3H4v13h5"/></svg>Скопировать расчёт</button><button class="secondary-button" id="print-button" type="button">Печать / PDF <span aria-hidden="true">↗</span></button></div></div>
+          <div id="invalid-result" hidden><strong>Проверьте параметры</strong><p>Исправьте отмеченные поля, чтобы увидеть актуальную стоимость.</p></div>
+          <p id="action-status" class="action-status" role="status"></p><div id="copy-fallback" hidden><label for="copy-text">Расчёт для ручного копирования</label><textarea id="copy-text" readonly rows="9"></textarea><button class="text-button" id="select-text" type="button">Выделить текст</button></div><p class="estimate-foot">Расчёт не оформляет заказ.</p>
+        </section>
+      </aside>
+    </div>
+    <p id="live-summary" class="sr-only" aria-live="polite" aria-atomic="true"></p><noscript><p class="noscript">Для расчёта включите JavaScript в браузере.</p></noscript>
+  </main>
+  <footer><span>дома легко</span><span id="price-version"></span></footer>
+  <section id="print-sheet"><h1>Дома легко. Расчёт уборки</h1><pre id="print-text"></pre></section>
+</body></html>

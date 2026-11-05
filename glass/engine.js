@@ -1,0 +1,29 @@
+(function(root){
+  'use strict';
+  const money=cents=>new Intl.NumberFormat('ru-RU',{style:'currency',currency:'RUB',minimumFractionDigits:0,maximumFractionDigits:2}).format(cents/100);
+  const number=value=>new Intl.NumberFormat('ru-RU',{maximumFractionDigits:6}).format(value);
+  const rounded=(n,d=100)=>Number((BigInt(n)+BigInt(d)/2n)/BigInt(d));
+  function calculate(input,pricing=root.PartitionPricing){
+    const errors={},values={};
+    for(const key of ['width','height','bays','quantity','discount']){const raw=String(input[key]??'').trim(),value=Number(raw),[min,max]=pricing.limits[key];if(!/^\d+$/.test(raw)||!Number.isSafeInteger(value)||value<min||value>max)errors[key]=`Введите целое число от ${min} до ${max}.`;values[key]=value;}
+    for(const[key,options]of [['glass',pricing.glass],['profile',pricing.profiles]])if(!Object.hasOwn(options,input[key]))errors[key]='Выберите доступный вариант.';
+    for(const key of ['door','installation','delivery'])if(typeof input[key]!=='boolean')errors[key]='Выберите вариант.';
+    if(Object.keys(errors).length)return {valid:false,errors};
+    const {width,height,bays,quantity,discount}=values,{door,installation,delivery}=input;
+    const fixedBayWidth=door?(width-pricing.doorWidth)/(bays-1):width/bays;
+    if(fixedBayWidth<pricing.minBayWidth)return {valid:false,errors:{bays:`При этой ширине уменьшите число секций${door?' или уберите дверь':''}: неподвижная секция должна быть не уже ${pricing.minBayWidth} мм в этой модели.`}};
+    const areaNumerator=width*height*quantity,area=areaNumerator/1e6,doorArea=door?pricing.doorWidth*pricing.doorHeight*quantity/1e6:0;
+    const profileMm=(2*width+2*height+(bays-1)*height-(door?pricing.doorWidth:0)+(door&&height>pricing.doorHeight?pricing.doorWidth:0))*quantity;
+    const glass=pricing.glass[input.glass],profile=pricing.profiles[input.profile],glassCents=rounded(BigInt(areaNumerator)*BigInt(glass.rate),1000000),profileBaseCents=rounded(BigInt(profileMm)*BigInt(pricing.profileRate),1000),finishCents=rounded(profileBaseCents*profile.surcharge),kitCents=door?pricing.doorKit*quantity:0;
+    const materialsCents=glassCents+profileBaseCents+finishCents+kitCents,installationCents=installation?rounded(materialsCents*pricing.installationPercent):0,discountCents=rounded(materialsCents*discount),deliveryCents=delivery?pricing.delivery:0;
+    const lines=[{id:'glass',label:`Стекло · ${glass.name.toLowerCase()}`,quantity:area,unit:'м²',rateCents:glass.rate,amountCents:glassCents,note:'Габаритная площадь, включая стекло двери; без вычета профиля.'},{id:'profile',label:'Профиль · базовый',quantity:profileMm/1000,unit:'пог. м',rateCents:pricing.profileRate,amountCents:profileBaseCents,note:'Условная длина по осям. Не ведомость раскроя.'}];
+    if(profile.surcharge)lines.push({id:'finish',label:'Чёрное покрытие профиля',quantity:profile.surcharge,unit:'%',basisCents:profileBaseCents,amountCents:finishCents,note:'Надбавка только к базовому профилю.'});
+    if(door)lines.push({id:'door',label:'Дверной комплект',quantity,unit:'шт.',rateCents:pricing.doorKit,amountCents:kitCents,note:'Фурнитура и условная обработка. Без стекла и профиля: они уже учтены.'});
+    if(installation)lines.push({id:'installation',label:'Монтаж',quantity:pricing.installationPercent,unit:'%',basisCents:materialsCents,amountCents:installationCents,note:'От материалов до скидки.'});
+    if(delivery)lines.push({id:'delivery',label:'Доставка',quantity:1,unit:'выезд',rateCents:pricing.delivery,amountCents:deliveryCents,note:'Один раз на весь расчёт.'});
+    if(discount)lines.push({id:'discount',label:'Скидка на материалы',quantity:discount,unit:'%',basisCents:materialsCents,amountCents:-discountCents,note:'Монтаж и доставка без скидки.'});
+    return {valid:true,errors,...values,door,installation,delivery,glass:input.glass,glassName:glass.name,profile:input.profile,profileName:profile.name,fixedBayWidth,area,doorArea,fixedArea:area-doorArea,profileLength:profileMm/1000,glassCents,profileBaseCents,finishCents,kitCents,materialsCents,installationCents,discountCents,deliveryCents,totalCents:materialsCents-discountCents+installationCents+deliveryCents,lines,version:pricing.version,doorWidth:pricing.doorWidth,doorHeight:pricing.doorHeight};
+  }
+  function toText(r){if(!r.valid)return '';return ['ПРОСВЕТ · Смета стеклянной перегородки',`Размер одной: ${number(r.width)} × ${number(r.height)} мм`,`Вертикальных секций: ${r.bays}`,`Количество одинаковых: ${r.quantity}`,`Стекло: ${r.glassName}`,`Профиль: ${r.profileName}`,`Дверь: ${r.door?'900 × 2100 мм с фрамугой над ней':'нет'}`,`Монтаж: ${r.installation?'15% материалов до скидки':'нет'}`,`Доставка: ${r.delivery?'один выезд на весь расчёт':'нет'}`,`Скидка на материалы: ${r.discount}%`,'',`Общая габаритная площадь: ${number(r.area)} м²`,`Из неё дверное стекло: ${number(r.doorArea)} м² (уже включено)`,`Неподвижное заполнение: ${number(r.fixedArea)} м²`,`Профиль по осям: ${number(r.profileLength)} пог. м`,'',...r.lines.map(l=>`${l.label}: ${number(l.quantity)} ${l.unit}${l.rateCents!==undefined?' × '+money(l.rateCents):' от '+money(l.basisCents)} = ${money(l.amountCents)}. ${l.note}`),'',`Материалы до скидки: ${money(r.materialsCents)}`,`ИТОГО: ${money(r.totalCents)}`,'',r.version+'. Все тарифы условные.','Каждая строка округляется до копейки half-up; проценты считаются от указанной базы. Общие количества партии считаются до округления строк.','Стекло двери учтено один раз. Площадь габаритная, профиль по осям; зазоры, сечения и отходы не моделируются.','Размеры и минимальная секция — ограничения демонстрационной модели, не проверка изготовимости, безопасности или нормативов. Не рабочий чертёж и не заказ. Нужен замер и подбор реальной системы специалистом.'].join('\n');}
+  const api={calculate,toText,money,number,rounded};root.PartitionCalc=api;if(typeof module!=='undefined'&&module.exports)module.exports=api;
+})(globalThis);
